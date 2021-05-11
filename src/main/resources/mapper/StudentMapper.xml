@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mapper根标签 namespace，命令空间：保证命名空间唯一，一般是对应的mapper.接口的包全路径,按ctrl键能跳转过去-->
+<mapper namespace="com.tulun.dao.StudentMapper">
+
+    <resultMap id="studentResult" type="com.tulun.bean.Student">
+        <!--SID是数据库的列名   property是java对象的属性-->
+        <result column="SID" property="SID"/>
+        <result column="Sname" property="Sname"/>
+        <result column="Sage" property="Sage"/>
+        <result column="Ssex" property="Ssex"/>
+
+    </resultMap>
+    <select id="findAll" resultMap="studentResult">
+    <!--<select id="findAll" resultType="com.tulun.bean.Student">-->
+        select  * from student;
+    </select>
+    <select id="selectStudentById"  parameterType="int"  resultType="com.tulun.bean.Student">
+        select * from student where SID=#{id};
+    </select>
+</mapper>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <!--加载spring容器-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-core.xml</param-value>
+    </context-param>
+    <!--通过 监听器 的形式来加载 spring配置
+      （读取web.xml时就会对spring-core文件进行加载 初始化）-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+    <!--前端控制器
+       （可配置多个，比如说直接让他到controller层   也可以配置静态文件的控制器）-->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+
+        <!--将springMVC的配置文件进行配置    浏览器输入http://localhost:8080/userList
+         方式一：自定义配置路径
+                在此处显性的配置<init-param>，会去resources的路径下找
+         方式二：采用默认的路径（就不用配置<init-param>）
+                默认在WEB-INF/web.xml的同级目录下 调用 当前“servlet-name名字-servlet.xml”文件-->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <!--基于注解形式的MVC整合-->
+            <param-value>classpath:/spring-mvc2.xml</param-value>
+
+            <!--基于注解形式-->
+            <!--<param-value>classpath:/spring-mvc.xml</param-value>-->
+
+            <!--测试基于配置形式来处理适配器和处理器-->
+            <!--<param-value>classpath:/spring-mvc1.xml</param-value>-->
+        </init-param>
+
+    </servlet>
+
+    <!--第一种：以特定的结尾(如.action 或 .do）的URL由前端控制器DispatcherServlet进行解析
+        第二种：/  所有访问的URL都由DispatcherServlet进行解析。而且可以返回的风格比较多（对象  String    ModelAndView）而
+        对于静态文件的解析是需要配置不让DispatcherServlet进行解析，此时需要实现RESTFUL风格的URL。
+          （即前端控制器只需要解析指定的特定的一些方法，静态文件的方法是不需要他处理的
+           RESTFUL是一种风格，做前后端分离，前后端的开发如何交互？就需要使用RESTFUL风格的接口进行交互）
+           前端到后端的请求，可以是  请求jsp的资源文件（称为动态资源文件）  还可以是  静态资源文件（如js（交互）  css样式表）
+           静态资源请求不需要到后端（不需要请求到controller下封装的方法）。所以静态文件和动态文件需要做一个区分处理
+
+        第三种：/* 使用这个配置，最终必须要转发到jsp的页面。DispatcherServlet仍然会解析jsp地址，不能根据jsp找到handler时,
+        会抛出异常
+        （（UserController里URL为test时，会返回纯数据，没有jsp页面，会报错；为userList时，会返回一个jsp页面，不会抛出异常）） -->
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <!--匹配模式-->
+        <!-- <url-pattern>.do</url-pattern>-->
+        <url-pattern>/</url-pattern>
+
+    </servlet-mapping>
+
+    <!--字符集编码配置-->
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+
+</web-app>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--基于  配置  形式来配置处理器映射器、处理器适配器和视图解析器-->
+    <!--处理器映射器-->
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+    <!--配置Handler实例，将实例交给容器管理
+        通过url:http://localhost:8080/userList1名称找到这个类的实例UserController1,然后处理返回一个jsp页面-->
+    <bean name="/userList1" class="com.tulun.controller.UserController1"/>
+    <!--这里不配置bean的id,而是name,是因为id没法识别 / _ 等字符,但他们都能获取对象的实例-->
+
+    <!--处理器适配器-->
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+
+    <!--视图解析器-->
+    <bean id="internalResourceViewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--jsp页面前缀-->
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <!--jsp后缀-->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+</beans>
